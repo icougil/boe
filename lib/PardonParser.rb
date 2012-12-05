@@ -1,13 +1,5 @@
 # encoding: UTF-8
 
-require 'rubygems'
-require 'nokogiri'
-require 'open-uri'
-require 'csv'
-
-# So I can tail the output file in real time when redirecting
-STDOUT.sync = true
-
 module PardonParser
   def self.get_BOE_id(filename)
     filename =~ /(BOE-.-\d{4}-\d+)/
@@ -29,8 +21,7 @@ module PardonParser
     return trial_date
   end
 
-  def self.parse_file(filename)
-    doc = Nokogiri::HTML(open(filename))
+  def self.parse_file(doc)
     title = doc.search(".documento-tit").text
     # TODO: Should probably not get the person name from the title: be more relaxed 
     # in regex to avoid missing odd ones
@@ -47,7 +38,7 @@ module PardonParser
       pdf =~ /dias\/(\d{4})\/(\d{2})\/(\d{2})/
       year, month, day = $1, $2, $3
 
-      # puts CSV::generate_line([get_BOE_id(filename), "#{day}-#{month}-#{year}", department, name])
+      puts CSV::generate_line([get_BOE_id(doc.url), "#{day}-#{month}-#{year}", department, name])
     end
   end
 end
