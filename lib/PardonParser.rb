@@ -64,19 +64,19 @@ module PardonParser
 
   def self.parse_file(doc)
     title = doc.search(".documento-tit").text
-    # TODO: Should probably not get the person name from the title: be more relaxed 
-    # in regex to avoid missing odd ones
-    if title =~ /se indulta a (do.*)\./ or title =~ /se concede el indulto .*? (do(n|ña) .*)\./
-      name = $1 # Matches the name in the title
-
-      # Get other relevant details from document
+    # Find out whether we have a pardon. Don't try to match the name in the title just in case, 
+    # we're being very prudent here to avoid missing a pardon.
+    if title =~ /se indulta a / or title =~ /se concede el indulto /
+      # Get main details from document...
       department = doc.search('.valDoc')[2].text
       first_paragraph, second_paragraph = doc.search("p.parrafo")
+
+      # ...and parse the two body paragraphs to extract fine details
       if department == 'Ministerio de Defensa'
         # TODO: Parse military stuff
       else
         sentence_date, role, crime, sentence, crime_year = get_trial_details(first_paragraph.text)
-        pardon_type, name_again, pardon, condition = get_pardon_details(second_paragraph.text)
+        pardon_type, name, pardon, condition = get_pardon_details(second_paragraph.text)
       end
 
       # We get the BOE date from the PDF url, easier than parsing the expanded human readable date
