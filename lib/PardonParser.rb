@@ -29,7 +29,7 @@ module PardonParser
     sentence_date, left_over = $1, $2
 
     # Now get the role and crime from the remainder
-    left_over =~ /como ([^ ]+) de (.*?),? a [^ ]+ penas? ((por cada (delito|uno de ellos) )?de .*?)[,;] por hechos/    
+    left_over =~ /como ([^ ]+) de (.*?),? a [^ ]+ penas? ((por cada (delito|uno de ellos) )?(de )?.*?)[,;] por hechos/    
     role, crime, sentence = $1, $2, $3
 
     # Useful while debugging new files
@@ -110,7 +110,7 @@ module PardonParser
       year, month, day = $1, $2, $3
 
       puts CSV::generate_line([ get_BOE_id(doc.url), 
-                                "#{day}-#{month}-#{year}", 
+                                "#{year}-#{month}-#{day}", 
                                 department, 
                                 name, 
                                 sentence_date, 
