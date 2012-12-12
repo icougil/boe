@@ -10,7 +10,7 @@ require './lib/PardonParser.rb'
 # So I can tail the output file in real time when redirecting
 STDOUT.sync = true
 
-puts 'BOE,Fecha,Departamento,Nombre,Fecha condena,Papel,Crímen,Sentencia'
+puts 'BOE,Fecha,Departamento,Nombre,Fecha condena,Papel,Crímen,Sentencia,Año Crimen'
 Dir['data/*.html'].each do |filename| 
   PardonParser.parse_file Nokogiri::HTML(open(filename))
 end
