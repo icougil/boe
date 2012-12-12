@@ -15,10 +15,6 @@ module PardonParser
   def self.get_trial_details(p)
     p.gsub!(NBSP, ' ') # Get rid of the funny whitespaces
 
-    if p =~ /deserción/
-      return get_military_trial_details(p)
-    end
-
     # Split along sentence date
     p =~ /en sentencia de (\d+ de [^ ]+ de.\d{4}), (.*)$/
     sentence_date, left_over = $1, $2
@@ -40,6 +36,32 @@ module PardonParser
     return sentence_date, role, crime, sentence, crime_year
   end
 
+  def self.get_pardon_details(p)
+    p.gsub!(NBSP, ' ') # Get rid of the funny whitespaces
+
+    # Find out the name of the person, and the type of perdon
+    p =~ /^Vengo en (\w+) a ((don|doña)( ((de la)|(de los)|del|de|[A-ZÁÉÍÓÚ][^ ]+))+)/
+    pardon_type, name = $1, $2
+    left_over = $'
+
+    # Useful while debugging new files
+    $stderr.puts p if $1.nil?
+
+    # Get some more details based on the 
+    if ( pardon_type == 'conmutar' )
+      # Note: ?: is a non-capturing group
+      left_over =~ /^(?: todas)? las? (?:penas? .*?) por(?: otra(?: única)? de)? (.*?),? a condición de que (.*) desde la publicación del real decreto\./
+      new_sentence, condition = $1, $2
+      # TODO: Alert if not match
+      return pardon_type, name, new_sentence, condition
+    else
+      left_over =~ /^ (.*?),? a condición de que (.*) desde la publicación del real decreto\./
+      partial_pardon, condition = $1, $2
+      # TODO: Alert if not match
+      return pardon_type, name, partial_pardon, condition
+    end
+  end
+
   def self.parse_file(doc)
     title = doc.search(".documento-tit").text
     # TODO: Should probably not get the person name from the title: be more relaxed 
@@ -50,14 +72,30 @@ module PardonParser
       # Get other relevant details from document
       department = doc.search('.valDoc')[2].text
       first_paragraph, second_paragraph = doc.search("p.parrafo")
-      sentence_date, role, crime, sentence, crime_year = get_trial_details(first_paragraph.text)
+      if department == 'Ministerio de Defensa'
+        # TODO: Parse military stuff
+      else
+        sentence_date, role, crime, sentence, crime_year = get_trial_details(first_paragraph.text)
+        pardon_type, name_again, pardon, condition = get_pardon_details(second_paragraph.text)
+      end
 
       # We get the BOE date from the PDF url, easier than parsing the expanded human readable date
       pdf = doc.search('.puntoPDF a').first.attributes['href'].value
       pdf =~ /dias\/(\d{4})\/(\d{2})\/(\d{2})/
       year, month, day = $1, $2, $3
 
-      puts CSV::generate_line([get_BOE_id(doc.url), "#{day}-#{month}-#{year}", department, name, sentence_date, role, crime, sentence, year])
+      puts CSV::generate_line([ get_BOE_id(doc.url), 
+                                "#{day}-#{month}-#{year}", 
+                                department, 
+                                name, 
+                                sentence_date, 
+                                role, 
+                                crime, 
+                                sentence, 
+                                crime_year,
+                                pardon_type,
+                                pardon,
+                                condition])
     end
   end
 end
