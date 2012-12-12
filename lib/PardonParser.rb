@@ -1,5 +1,7 @@
 # encoding: UTF-8
 
+# TODO: Some duplicated code below
+
 module PardonParser
   # There are some funny non-breaking spaces in the content, we have to deal with those at some points
   NBSP = "\u00a0"
@@ -10,6 +12,13 @@ module PardonParser
   end
 
   def self.get_military_trial_details(p)
+    p.gsub!(NBSP, ' ') # Get rid of the funny whitespaces
+
+    # This regex could be simpler, as all military cases seem to be about desertion, but I used the civil one as base
+    p =~ /como ([^ ]+) de (.*?),? a la pena de (.*?)[,;] constando en el mismo/
+    role, crime, sentence = $1, $2, $3
+
+    return nil, role, crime, sentence, nil
   end
 
   def self.get_trial_details(p)
@@ -28,12 +37,27 @@ module PardonParser
     $stderr.puts left_over if $3.nil?
 
     # Get the time of the crime (trying to do this in previous regex gets messy because of many levels of brackets)
-    left_over =~ /por hechos cometidos en (el|los) años? ([0-9\-]+)/
-    crime_year = $2
+    left_over =~ /por hechos cometidos en (?:el|los) años? ([0-9\-]+)/
+    crime_year = $1
 
     sentence.gsub!(/^de /,'') # Remove the 'de ' at the begining, if it exists
 
     return sentence_date, role, crime, sentence, crime_year
+  end
+
+  def self.get_military_pardon_details(p)
+    p.gsub!(NBSP, ' ') # Get rid of the funny whitespaces
+
+    # Find out the name of the person, and the type of perdon
+    p =~ /((don|doña)( ((de la)|(de los)|del|de|[A-ZÁÉÍÓÚ][^ ,]+))+),? el (.*?) respecto/
+    name, pardon_type = $1, $+
+    left_over = $'
+
+    # Find out what the new sentence is
+    left_over =~ /remitiendo la misma por la de (.*)\./
+    new_sentence = $1
+
+    return pardon_type, name, new_sentence, nil
   end
 
   def self.get_pardon_details(p)
@@ -73,7 +97,8 @@ module PardonParser
 
       # ...and parse the two body paragraphs to extract fine details
       if department == 'Ministerio de Defensa'
-        # TODO: Parse military stuff
+        sentence_date, role, crime, sentence, crime_year = get_military_trial_details(first_paragraph.text)
+        pardon_type, name, pardon, condition = get_military_pardon_details(second_paragraph.text)
       else
         sentence_date, role, crime, sentence, crime_year = get_trial_details(first_paragraph.text)
         pardon_type, name, pardon, condition = get_pardon_details(second_paragraph.text)
