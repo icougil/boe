@@ -101,4 +101,11 @@ class PardonParserTest < Test::Unit::TestCase
     assert_equal '30 días de trabajo en beneficio de la comunidad', new_sentence
     assert_equal 'no vuelva a cometer delito doloso en el plazo de tres años', condition
   end
+
+  def test_crime_categories
+    assert_equal 'robo', PardonParser.get_crime_category('cuatro delitos de robo con fuerza en las cosas')
+
+    # Unknown crimes return nil
+    assert_equal nil, PardonParser.get_crime_category('foo')
+  end
 end

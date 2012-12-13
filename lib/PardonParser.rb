@@ -1,5 +1,8 @@
 # encoding: UTF-8
 
+# TODO: There's a bit of an edge case: commute pardon on someone who has been condemned for multiple crimes: 
+# we don't currently know which crime the pardon applies to
+
 # TODO: Some duplicated code below
 
 module PardonParser
@@ -11,11 +14,72 @@ module PardonParser
     $1
   end
 
+  # TODO: Handle multiple crimes/categories
+  def self.get_crime_category(crime)
+    [ 'homicidio',
+      'robo', 
+        'hurto',
+      'tráfico de sustancias estupefacientes',
+        'tráfico de drogas',
+        'tráfico ilícito de drogas',
+        'contra la salud pública',
+        'contra salud pública',
+      'deserción',
+      'estafa',
+      'simulación de contrato',
+      'alzamiento de bienes',
+      'delito societario',
+        'insolvencia punible',
+      'denuncia falsa',
+      'falsedad en documento oficial',
+        'falsedad de documento oficial',
+        'falsedad documental',
+        'falsedad en documento mercantil',
+        'falsedad',
+      'prevaricación',
+        'apropiación indebida',
+        'malversación de caudales públicos',
+        'malversación impropia',
+        'contra la Hacienda Pública',
+      'torturas',
+      'contra la propiedad intelectual',
+      'contra el medio ambiente',
+        'contra el derecho fundamental al medio ambiente',
+      'incendio intencionado',
+      'tenencia ilícita de arma',
+      'expedición de moneda falsa',
+        'falsificación de moneda',
+      'abandono de familia',
+        'impago de pensiones alimenticias',
+      'coacciones',
+      'lesiones', 
+        'daños',
+      'contra la integridad moral',
+      'modificación de datos reservados',
+      'atentado',
+        'resistencia',
+        'desobediencia',
+        'falta de respeto y consideración debida a la autoridad',
+      'detención ilegal',
+        'omisión del deber de perseguir delitos',
+      'receptación',
+      'usurpación del estado civil',
+      'abusos sexuales',
+      'determinación coactiva a la prostitución',
+      'promoción de la inmigración clandestina',
+      'contra la Hacienda de la Comunidad Europea',
+      ].each do |keyword|
+      return keyword if crime =~ Regexp.new(keyword)
+    end
+    $stderr.puts("WARN Category not found for crime #{crime}.")
+    return nil
+  end
+
   def self.get_military_trial_details(p)
     p.gsub!(NBSP, ' ') # Get rid of the funny whitespaces
 
     # Extract tribunal
-    p =~ /condenado por (?:el|la) (.*?), en las Diligencia/
+    p =~ /condenad[oa] por (?:el|la) (.*?), en las Diligencia/
     court = $1
 
     # This regex could be simpler, as all military cases seem to be about desertion, but I used the civil one as base
@@ -108,6 +172,7 @@ module PardonParser
         court, sentence_date, role, crime, sentence, crime_year = get_trial_details(first_paragraph.text)
         pardon_type, name, pardon, condition = get_pardon_details(second_paragraph.text)
       end
+      crime_category = get_crime_category(crime)
 
       # We get the BOE date from the PDF url, easier than parsing the expanded human readable date
       pdf = doc.search('.puntoPDF a').first.attributes['href'].value
@@ -121,7 +186,8 @@ module PardonParser
                                 court,
                                 sentence_date, 
                                 role, 
-                                crime, 
+                                crime,
+                                crime_category,
                                 sentence, 
                                 crime_year,
                                 pardon_type,
