@@ -14,19 +14,24 @@ module PardonParser
   def self.get_military_trial_details(p)
     p.gsub!(NBSP, ' ') # Get rid of the funny whitespaces
 
+    # Extract tribunal
+    p =~ /condenado por (?:el|la) (.*?), en las Diligencia/
+    court = $1
+
     # This regex could be simpler, as all military cases seem to be about desertion, but I used the civil one as base
     p =~ /como ([^ ]+) de (.*?),? a la pena de (.*?)[,;] constando en el mismo/
     role, crime, sentence = $1, $2, $3
 
-    return nil, role, crime, sentence, nil
+    return court, nil, role, crime, sentence, nil
   end
 
   def self.get_trial_details(p)
     p.gsub!(NBSP, ' ') # Get rid of the funny whitespaces
 
     # Split along sentence date
-    p =~ /en sentencia de (\d+ de [^ ]+ de.\d{4}), (.*)$/
-    sentence_date, left_over = $1, $2
+    p =~ /condenad[ao] por (?:el|la) (.*?), en sentencia de (\d+ de [^ ]+ de \d{4})/
+    court, sentence_date = $1, $2
+    left_over = $'
 
     # Now get the role and crime from the remainder
     left_over =~ /como ([^ ]+) de (.*?),? a [^ ]+ penas? ((por cada (delito|uno de ellos) )?(de )?.*?)[,;] por hechos/    
@@ -42,7 +47,7 @@ module PardonParser
 
     sentence.gsub!(/^de /,'') # Remove the 'de ' at the begining, if it exists
 
-    return sentence_date, role, crime, sentence, crime_year
+    return court, sentence_date, role, crime, sentence, crime_year
   end
 
   def self.get_military_pardon_details(p)
@@ -97,10 +102,10 @@ module PardonParser
 
       # ...and parse the two body paragraphs to extract fine details
       if department == 'Ministerio de Defensa'
-        sentence_date, role, crime, sentence, crime_year = get_military_trial_details(first_paragraph.text)
+        court, sentence_date, role, crime, sentence, crime_year = get_military_trial_details(first_paragraph.text)
         pardon_type, name, pardon, condition = get_military_pardon_details(second_paragraph.text)
       else
-        sentence_date, role, crime, sentence, crime_year = get_trial_details(first_paragraph.text)
+        court, sentence_date, role, crime, sentence, crime_year = get_trial_details(first_paragraph.text)
         pardon_type, name, pardon, condition = get_pardon_details(second_paragraph.text)
       end
 
@@ -113,6 +118,7 @@ module PardonParser
                                 "#{year}-#{month}-#{day}", 
                                 department, 
                                 name, 
+                                court,
                                 sentence_date, 
                                 role, 
                                 crime, 
