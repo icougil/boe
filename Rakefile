@@ -8,11 +8,6 @@ end
 desc "Run tests"
 task :default => :test
 
-
-task :with_defaults, :arg1, :arg2 do |t, args|
-  args.with_defaults(:arg1 => :default_1, :arg2 => :default_2)
-  puts "Args with defaults were: #{args}"
-end
 namespace 'parse' do
   desc "Extract pardons from BOE files"
   #task :pardons, [:year] do |t, args|
