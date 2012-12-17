@@ -6,7 +6,7 @@ Descargando y parseando el BOE. More information to follow...
 Rake
 ----
 
-Existen tareas Rake para ejecutar las tareas anteriores:
+Existen una tarea Rake para ejecutar el parsing de los indultos:
 
     $ rake -T
     rake default                   # Run tests
