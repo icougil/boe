@@ -13,6 +13,7 @@ HEADER = 'BOE,Fecha,Departamento,Nombre,Fecha condena,Papel,Cr√≠men,Sentencia,A√
 LOG_SUBDIR = 'logs'
 OUTPUT_FILES_SUBDIR = 'output'
 YEAR = ARGV[0]
+PATH = ARGV[1]
 FileUtils.makedirs(LOG_SUBDIR)
 FileUtils.makedirs(OUTPUT_FILES_SUBDIR)
 
@@ -25,7 +26,7 @@ $output_debug_file = File.open("#{OUTPUT_FILES_SUBDIR}/IndultosDebug#{YEAR}.csv"
 $output_debug_file.puts HEADER
 count = 0
 pardons = 0
-Dir["../#{YEAR}/*.html"].each do |filename| 
+Dir["#{PATH}/*.html"].each do |filename| 
   puts "parsed #{count} BOE documents" if (count != 0 and count % 1000 == 0)
   result = PardonParser.parse_file Nokogiri::HTML(open(filename))
   pardons += 1 if result
