@@ -87,11 +87,11 @@ module PardonParser
       @excep = true
       return
     end
-
+    
     # Get some more details based on the pardon_type
-    if ( pardon_type != 'indulto total' )
+    if (pardon_type != 'indulto total' )
       # Find out what the new sentence is
-      left_over =~ /(?:remitiendo|que remitirá)\s+(?:.*?)\s*(?:a|por) la de (.*)\./
+      left_over =~ /(?:remitiendo|que remitirá)\s+(?:.*?)\s*(?:a|por) la de (.*?)\./
       new_sentence = $1
     
       if $1.nil? 
@@ -122,18 +122,18 @@ module PardonParser
     # Get some more details based on the pardon_type
     if ( pardon_type == 'conmutar' )
       # Note: ?: is a non-capturing group
-      left_over =~ / por(?: otra(?: única)? de)? (.*?),? a condición (?:de )que (.*)(:? desde la publicación|\.\s+Dado)/
+      left_over =~ / por(?: otra(?: única)? de)? (.*?),? a condición (?:de )que (.*?)(:? desde la publicación|\.\s+Dado)/
       new_sentence, condition = $1, $2
       if $1.nil? 
         # Notify that an unhandled field has been found
         @excep_desc = "Error parsing new_sentence and condition in get_pardon_details"
         @excep = true
       else
-         condition.gsub!(/desde la publicación.*$/,'')
+         #condition.gsub!(/desde la publicación.*$/,'')
       end
       return pardon_type, new_sentence, condition
     else
-      left_over =~ /^ (.*?),? a condición (?:de )que (.*)(:? desde la publicación|\.\s+Dado)/
+      left_over =~ /^ (.*?),? a condición (?:de )que (.*?)(:? desde la publicación|\.\s+Dado)/
       partial_pardon, condition = $1, $2
       if $1.nil? 
         # Notify that an unhandled field has been found
@@ -142,7 +142,7 @@ module PardonParser
       else
         # If condition starts with don/doña remove the name from the partial_pardon
         partial_pardon.gsub!(/^\s*(don|doña)( ((y)|(de la)|(de los)|del|de|[A-ZÁÉÍÓÚ][^ ]+))+\s*/,'')
-        condition.gsub!(/desde la publicación.*$/,'')
+        #condition.gsub!(/desde la publicación.*$/,'')
       end
       return pardon_type, partial_pardon, condition
     end
