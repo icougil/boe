@@ -49,7 +49,7 @@ module PardonParser
     end
 
     # Now get the role and crime and sentence from the remainder
-    left_over =~ /como (.*?) de (.*?),? a [^ ]+ (?:medida|pena)s? ((por cada (delito|uno de ellos) )?(de )?.*?)[,;]? por hechos? cometidos?/   
+    left_over =~ /como (.*?) de (.*?),? a [^ ]+ (?:medida|pena)s? ((por cada (delito|uno de ellos) )?(de )?.*?)[,;]? por hechos? cometidos?/ 
     role, crime, sentence = $1, $2, $3
 
     if $1.nil? 
@@ -128,8 +128,6 @@ module PardonParser
         # Notify that an unhandled field has been found
         @excep_desc = "Error parsing new_sentence and condition in get_pardon_details"
         @excep = true
-      else
-         #condition.gsub!(/desde la publicación.*$/,'')
       end
       return pardon_type, new_sentence, condition
     else
@@ -142,7 +140,6 @@ module PardonParser
       else
         # If condition starts with don/doña remove the name from the partial_pardon
         partial_pardon.gsub!(/^\s*(don|doña)( ((y)|(de la)|(de los)|del|de|[A-ZÁÉÍÓÚ][^ ]+))+\s*/,'')
-        #condition.gsub!(/desde la publicación.*$/,'')
       end
       return pardon_type, partial_pardon, condition
     end
