@@ -77,7 +77,7 @@ module PardonParser
     p.gsub!(NBSP, ' ') # Get rid of the funny whitespaces
 
     # Find out the type of perdon
-    p =~ /^\s*Vengo\s+(?:en|a)\s+(?:.*),? el (.*?) (?:respecto )?de las? (?:medida|pena)s?/
+    p =~ /^\s*Vengo\s+(?:en|a)\s+(?:.*),? el (.*?) (?:respecto )?(?:de|a) las? (?:medida|pena)s?/
     pardon_type = $1
     left_over = $'
 
@@ -140,6 +140,8 @@ module PardonParser
         @excep_desc = "Error parsing partial_pardon and condition in get_pardon_details"
         @excep = true
       else
+        # If condition starts with don/doña remove the name from the partial_pardon
+        partial_pardon.gsub!(/^\s*(don|doña)( ((y)|(de la)|(de los)|del|de|[A-ZÁÉÍÓÚ][^ ]+))+\s*/,'')
         condition.gsub!(/desde la publicación.*$/,'')
       end
       return pardon_type, partial_pardon, condition
