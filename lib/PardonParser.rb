@@ -22,14 +22,22 @@ module PardonParser
   def self.get_military_trial_details(p)
     p.gsub!(NBSP, ' ') # Get rid of the funny whitespaces
 
-    # This regex could be simpler, as all military cases seem to be about desertion, but I used the civil one as base
-    p =~ /como (.*?) de (.*?),? a las? (?:pena|medida)s? de (.*?)[,;] (?:constando en el mismo|a propuesta de)/
+    # There are two alternative ways of writing the military trial details (role,crime,sentence) or (sentence,role,crime)
+    # First we try the most used case (role,crime,sentence)
+    #p =~ /como (.*?) de (.*?),? a las? (?:pena|medida)s? de (.*?)[,;] (?:(?:y )?(?:constando|al constar) en (?:el mismo|áquel)|a propuesta de)/
+    p =~ /como (.*?) de (.*?), previsto y penado (?:.*?),? a las? (?:pena|medida)s? de (.*?)[,;] (?:(?:y )?(?:constando|al constar) en (?:el mismo|aqu[ée]l)|a propuesta de)/
     role, crime, sentence = $1, $2, $3
     
     if $1.nil? 
-      # Notify that an unhandled field has been found
-      @excep_desc = "Error parsing role, crime, sentence in get_military_trial_details"
-      @excep = true
+      # If we had no luck we try the second case (sentence,role,crime)
+      #p =~ /a las? (?:pena|medida)s? de (.*?)[,;] como (.*?) de (.*?), (?:(?:y )?(?:constando|al constar) en (?:el mismo|áquel)|a propuesta de)/
+      p =~ /a las? (?:pena|medida)s? de (.*?)[,;] como (.*?) de (.*?), previsto y penado/
+      sentence, role, crime = $1, $2, $3
+      if $1.nil?
+        # Notify that an unhandled field has been found
+        @excep_desc = "Error parsing role, crime, sentence in get_military_trial_details"
+        @excep = true
+      end
     end
     return nil, role, crime, sentence, nil
   end
@@ -38,7 +46,8 @@ module PardonParser
     p.gsub!(NBSP, ' ') # Get rid of the funny whitespaces
 
     # Split along sentence date
-    p =~ /en sentencia de (?:fecha )?(\d+ de\s+[^ ]+\s+de\s+\d{4}),? (.*)$/
+    # TODO: Handle pardons with more than one sentence date, right now catch the first one
+    p =~ /en sentencias? de (?:fechas? )?(\d+ de\s+[^ ]+\s+de\s+\d{4}),? (.*)$/
     sentence_date, left_over = $1, $2
     
     if $1.nil? 
@@ -60,13 +69,18 @@ module PardonParser
     end
 
     # Get the time of the crime (trying to do this in previous regex gets messy because of many levels of brackets)
-    left_over =~ /por hechos? cometidos? (?:en|durante) (?:el|los) años? ([0-9\-]+)/
+    #left_over =~ /por hechos? cometidos? (?:en|durante|entre) (?:el|los) años? ([0-9\-]+)/
+    #left_over =~ /por hechos? cometidos? (?:en|durante|entre) (?:el|los) años? ([0-9]{4}(?:\s*y\s*|\-)?(?:[0-9]{4})?)/
+    left_over =~ /por hechos? cometidos? (?:en|durante|entre) (?:(?:el|los) años?\s*)?([0-9]{4}(?:\s*y\s*|\-)?(?:[0-9]{4})?)/
     crime_year = $1
     
     if $1.nil? 
       # Notify that an unhandled field has been found
       @excep_desc = "Error parsing crime_year in get_trial_details"
       @excep = true
+    else
+      # To give more coherence to the crime time field
+      crime_year.gsub!(/\s*y\s*/,'-')
     end
 
     sentence.gsub!(/^de /,'') if !sentence.nil? # Remove the 'de ' at the begining, if it exists
@@ -91,7 +105,7 @@ module PardonParser
     # Get some more details based on the pardon_type
     if (pardon_type != 'indulto total' )
       # Find out what the new sentence is
-      left_over =~ /(?:remitiendo|que remitirá)\s+(?:.*?)\s*(?:a|por) la de (.*?)\./
+      left_over =~ /(?:remitiendo|que remitirá)\s+(?:.*?)\s*(?:a|por|hasta) la (?:pena\s*)?de (.*?)\./
       new_sentence = $1
     
       if $1.nil? 
