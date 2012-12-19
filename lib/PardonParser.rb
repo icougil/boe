@@ -60,6 +60,9 @@ module PardonParser
       end
     end
 
+    # TODO: Handle pardons with more than one crime and sentence, right now after first crime
+    # the rest is stored inside the sentence field
+    
     # Now get the role and crime and sentence from the remainder
     left_over =~ /como (.*?) de (.*?),? a [^ ]+ (?:medida|pena)s? ((por cada (delito|uno de ellos) )?(de )?.*?)[,;]? por hechos? cometidos?/ 
     role, crime, sentence = $1, $2, $3
@@ -113,7 +116,16 @@ module PardonParser
         # Notify that an unhandled field has been found
         @excep_desc = "Error parsing new_sentence in get_military_pardon_details"
         @excep = true
+      else
+        # Clean up new_sentence in case name appears in
+        # Ex: "quince días de prisión, al Soldado Militar Profesional de Tropa
+        # y Marinería del Ejército de Tierra don José Hernández Quintero"
+        if (new_sentence =~ /((don|doña)( ((y)|(de la)|(de los)|del|de|[A-ZÁÉÍÓÚ][^ ]+))+)/)
+          new_sentence.gsub!(/prisión, al? .*$/,"prisión.")
+        end
+        
       end
+      
     end
 
     return pardon_type, new_sentence, nil
