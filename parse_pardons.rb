@@ -24,10 +24,10 @@ $output_file.puts HEADER
 #Detected pardon statements with unhandled fields file for manual review
 $output_debug_file = File.open("#{OUTPUT_FILES_SUBDIR}/IndultosDebug#{YEAR}.csv", 'w')
 $output_debug_file.puts HEADER
-count = 0
+count = 1
 pardons = 0
 Dir["#{PATH}/*.html"].each do |filename| 
-  puts "parsed #{count} BOE documents" if (count != 0 and count % 1000 == 0)
+  puts "parsed #{count} BOE documents found #{pardons} pardon docs." if (count % 1000 == 0)
   result = PardonParser.parse_file Nokogiri::HTML(open(filename))
   pardons += 1 if result
   count += 1
