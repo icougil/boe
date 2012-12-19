@@ -180,7 +180,7 @@ module PardonParser
    
     # Find out whether we have a pardon. Don't try to match the name in the title just in case, 
     # we're being very prudent here to avoid missing a pardon.
-    if (!title.empty? and (title =~ /(?:se)? indulta al? / or title =~ /se concede el indulto,? /))
+    if (!title.empty? and (title =~ /se indulta al? / or title =~ /se concede el indulto,? /))
       # Register in the log and ignore the document if it is an error correction document
       if (title =~ /^Corrección/)
         write_log(get_BOE_id(doc.url),"Is a correction statement review",nil,nil)
