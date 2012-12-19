@@ -24,13 +24,11 @@ module PardonParser
 
     # There are two alternative ways of writing the military trial details (role,crime,sentence) or (sentence,role,crime)
     # First we try the most used case (role,crime,sentence)
-    #p =~ /como (.*?) de (.*?),? a las? (?:pena|medida)s? de (.*?)[,;] (?:(?:y )?(?:constando|al constar) en (?:el mismo|áquel)|a propuesta de)/
     p =~ /como (.*?) de (.*?), previsto y penado (?:.*?),? a las? (?:pena|medida)s? de (.*?)[,;] (?:(?:y )?(?:constando|al constar) en (?:el mismo|aqu[ée]l)|a propuesta de)/
     role, crime, sentence = $1, $2, $3
     
     if $1.nil? 
       # If we had no luck we try the second case (sentence,role,crime)
-      #p =~ /a las? (?:pena|medida)s? de (.*?)[,;] como (.*?) de (.*?), (?:(?:y )?(?:constando|al constar) en (?:el mismo|áquel)|a propuesta de)/
       p =~ /a las? (?:pena|medida)s? de (.*?)[,;] como (.*?) de (.*?), previsto y penado/
       sentence, role, crime = $1, $2, $3
       if $1.nil?
@@ -45,9 +43,8 @@ module PardonParser
   def self.get_trial_details(p)
     p.gsub!(NBSP, ' ') # Get rid of the funny whitespaces
 
-    # Split along sentence date
     # TODO: Handle pardons with more than one sentence date, right now catch the first one
-    p =~ /en sentencias? de (?:fechas? )?(\d+ de\s+[^ ]+\s+de\s+\d{4}),? (.*)$/
+    p =~ /en sentencias? de (?:fechas? )?(\d+ de\s+[^ ]+\s+(?:de\s+)?\d{4}),? (.*)$/
     sentence_date, left_over = $1, $2
     
     if $1.nil? 
@@ -55,6 +52,12 @@ module PardonParser
       @excep_desc = "Error parsing sentence date in get_trial_details"
       @excep = true
       return
+    else
+      # Restore common sentence_date Ex: 9 de septiembre 1999 -> 9 de septiembre de 1999
+      parts = sentence_date.split(' ')
+      if parts.length == 4
+        sentence_date = [parts[0],parts[2],parts[3]].join(" de ")
+      end
     end
 
     # Now get the role and crime and sentence from the remainder
@@ -69,9 +72,7 @@ module PardonParser
     end
 
     # Get the time of the crime (trying to do this in previous regex gets messy because of many levels of brackets)
-    #left_over =~ /por hechos? cometidos? (?:en|durante|entre) (?:el|los) años? ([0-9\-]+)/
-    #left_over =~ /por hechos? cometidos? (?:en|durante|entre) (?:el|los) años? ([0-9]{4}(?:\s*y\s*|\-)?(?:[0-9]{4})?)/
-    left_over =~ /por hechos? cometidos? (?:en|durante|entre) (?:(?:el|los) años?\s*)?([0-9]{4}(?:\s*y\s*|\-)?(?:[0-9]{4})?)/
+    left_over =~ /por hechos? cometidos? (?:en|durante|entre) (?:(?:el|los) años?\s*)?(\d{4}(?:\s*y\s*|\-)?(?:\d{4})?)/
     crime_year = $1
     
     if $1.nil? 
