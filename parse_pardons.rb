@@ -27,7 +27,7 @@ $output_debug_file.puts HEADER
 count = 1
 pardons = 0
 Dir["#{PATH}/*.html"].each do |filename| 
-  puts "parsed #{count} BOE documents found #{pardons} pardon docs." if (count % 1000 == 0)
+  puts "parsed #{count} BOE documents: found #{pardons} pardon docs." if (count % 1000 == 0)
   result = PardonParser.parse_file Nokogiri::HTML(open(filename))
   pardons += 1 if result
   count += 1
