@@ -176,10 +176,10 @@ module PardonParser
     # Initialize exception vars
     @excep = false
     @excep_desc = ""
-    title = doc.search(".documento-tit").text
+    title = doc.css("h3.documento-tit").text
     # Find out whether we have a pardon. Don't try to match the name in the title just in case, 
     # we're being very prudent here to avoid missing a pardon.
-    if (title =~ /se indulta a / or title =~ /se concede el indulto /) 
+    if (!title.empty? and (title =~ /se indulta a / or title =~ /se concede el indulto /))
       # Register in the log and ignore the document if it is an error correction document
       if (title =~ /^Corrección/)
         write_log(get_BOE_id(doc.url),"Is a correction statement review",nil,nil)
@@ -188,10 +188,10 @@ module PardonParser
       
       # Get main details from document...
       #Department
-      department = doc.search('.valDoc')[2].text
+      department = doc.css("p.valDoc")[2].text
       
       # First we capture all the text paragraphs 
-      pardon_text = doc.css('div#textoxslt').text
+      pardon_text = doc.css("div#textoxslt").text
       # Format the obtained text to unify it
       formatted_text = pardon_text.gsub(/\n/,"").squeeze(" ")
       # Split the text in two groups trial and pardon details: 
