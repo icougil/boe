@@ -255,6 +255,7 @@ module PardonParser
                                 pardon_type,
                                 pardon,
                                 condition])
+        return false
       else
         # Write to output file
         $output_file.puts CSV::generate_line([ get_BOE_id(doc.url), 
