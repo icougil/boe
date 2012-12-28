@@ -44,7 +44,7 @@ module PardonParser
     p.gsub!(NBSP, ' ') # Get rid of the funny whitespaces
 
     # TODO: Handle pardons with more than one sentence date, right now catch the first one
-    p =~ /en sentencias? de (?:fechas? )?(\d+ de\s+[^ ]+\s+(?:de\s+)?\d{4}),? (.*)$/
+    p =~ /en sentencias?,? de (?:fechas? )?(\d+ de\s+[^ ]+\s+(?:de\s+)?\d{4}),? (.*)$/
     sentence_date, left_over = $1, $2
     
     if $1.nil? 
@@ -77,11 +77,17 @@ module PardonParser
     # Get the time of the crime (trying to do this in previous regex gets messy because of many levels of brackets)
     left_over =~ /por hechos? cometidos? (?:en|durante|entre) (?:(?:el|los) años?\s*)?(\d{4}(?:\s*y\s*|\-)?(?:\d{4})?)/
     crime_year = $1
-    
-    if $1.nil? 
-      # Notify that an unhandled field has been found
-      @excep_desc = "Error parsing crime_year in get_trial_details"
-      @excep = true
+
+    if $1.nil?
+      # In 1996 changes from year to date in the crime_year so if we don't find it in the first
+      # try we parse it the second way.
+      left_over =~ /por hechos? cometidos?\s*el\s*(?:\d+ de\s+[^ ]+\s+(?:de\s+)?(\d{4}))/
+      crime_year = $1
+      if $1.nil?
+        # Notify that an unhandled field has been found
+        @excep_desc = "Error parsing crime_year in get_trial_details"
+        @excep = true
+      end
     else
       # To give more coherence to the crime time field
       crime_year.gsub!(/\s*y\s*/,'-')
