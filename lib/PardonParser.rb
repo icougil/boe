@@ -21,6 +21,16 @@ module PardonParser
 
   def self.get_military_trial_details(p)
     p.gsub!(NBSP, ' ') # Get rid of the funny whitespaces
+    
+    # Extract tribunal
+    p =~ /condenad[oa] por (?:el|la) (.*?), en (?:el|las?)?\s*(?:[Dd]iligencias?|[Ss]umario|[Cc]ausa)/
+    court = $1
+    if $1.nil? 
+      # Notify that an unhandled field has been found
+      @excep_desc = "Error parsing court in get_military_trial_details"
+      @excep = true
+      return
+    end
 
     # There are two alternative ways of writing the military trial details (role,crime,sentence) or (sentence,role,crime)
     # First we try the most used case (role,crime,sentence)
@@ -37,32 +47,39 @@ module PardonParser
         @excep = true
       end
     end
-    return nil, role, crime, sentence, nil
+    return court, nil, role, crime, sentence, nil
   end
 
   def self.get_trial_details(p)
     p.gsub!(NBSP, ' ') # Get rid of the funny whitespaces
 
     # TODO: Handle pardons with more than one sentence date, right now catch the first one
-    p =~ /en sentencias?,? de (?:fechas? )?(\d+ de\s+[^ ]+\s+(?:de\s+)?\d{4}),? (.*)$/
-    sentence_date, left_over = $1, $2
+    p =~ /condenad[ao] por (?:el|las?|los|) (.*?),? en sentencias?,? de (?:fechas? )?(\d+ de\s+[^ ]+\s+(?:de\s+)?\d{4})/
+    court, sentence_date = $1, $2
+    left_over = $'
     
     if $1.nil? 
-      # Notify that an unhandled field has been found
-      @excep_desc = "Error parsing sentence date in get_trial_details"
-      @excep = true
-      return
-    else
-      # Restore common sentence_date Ex: 9 de septiembre 1999 -> 9 de septiembre de 1999
-      parts = sentence_date.split(' ')
-      if parts.length == 4
-        sentence_date = [parts[0],parts[2],parts[3]].join(" de ")
+      # Handle second case of court description
+      #p =~ /incoad[ao] (.*) [Pp]enal,? por (?:el|la) (.*?),? en sentencias?,? de (?:fechas? )?(\d+ de\s+[^ ]+\s+(?:de\s+)?\d{4})/
+      p =~ /incoad[ao] (?:.*) [Pp]enal,?(?:.* tercero,)? por (?:el|la) (.*?),? en sentencias?,? de (?:fechas? )?(\d+ de\s+[^ ]+\s+(?:de\s+)?\d{4})/
+      court, sentence_date = $1, $2
+      left_over = $'
+      
+      if $1.nil?
+        # Notify that an unhandled field has been found
+        @excep_desc = "Error parsing court, sentence_date in get_trial_details"
+        @excep = true
+        return
       end
+    end
+    # Restore common sentence_date Ex: 9 de septiembre 1999 -> 9 de septiembre de 1999
+    parts = sentence_date.split(' ')
+    if parts.length == 4
+      sentence_date = [parts[0],parts[2],parts[3]].join(" de ")
     end
 
     # TODO: Handle pardons with more than one crime and sentence, right now after first crime
     # the rest is stored inside the sentence field
-    
     # Now get the role and crime and sentence from the remainder
     left_over =~ /como (.*?) de (.*?),? a [^ ]+ (?:medida|pena)s? ((por cada (delito|uno de ellos) )?(de )?.*?)[,;]? por hechos? cometidos?/ 
     role, crime, sentence = $1, $2, $3
@@ -71,7 +88,7 @@ module PardonParser
       # Notify that an unhandled field has been found
       @excep_desc = "Error parsing role, crime and sentence in get_trial_details"
       @excep = true
-      return sentence_date, role, crime, sentence, nil
+      return court, sentence_date, role, crime, sentence, nil
     end
 
     # Get the time of the crime (trying to do this in previous regex gets messy because of many levels of brackets)
@@ -94,7 +111,7 @@ module PardonParser
     end
 
     sentence.gsub!(/^de /,'') if !sentence.nil? # Remove the 'de ' at the begining, if it exists
-    return sentence_date, role, crime, sentence, crime_year
+    return court, sentence_date, role, crime, sentence, crime_year
   end
   
   def self.get_military_pardon_details(p)
@@ -215,14 +232,14 @@ module PardonParser
       end
 
       if department == 'Ministerio de Defensa'
-        sentence_date, role, crime, sentence, crime_year = get_military_trial_details(first_paragraph)
+        court, sentence_date, role, crime, sentence, crime_year = get_military_trial_details(first_paragraph)
         pardon_type, pardon, condition = get_military_pardon_details(second_paragraph)
       else
-        sentence_date, role, crime, sentence, crime_year = get_trial_details(first_paragraph)
+        court, sentence_date, role, crime, sentence, crime_year = get_trial_details(first_paragraph)
         pardon_type, pardon, condition = get_pardon_details(second_paragraph)
       end
       
-      #Name
+      # Name
       title =~ /((don|doña)( ((y)|(de la)|(de los)|del|de|[A-ZÁÉÍÓÚ][^ ]+))+)/
       name = $1
       if $1.nil?
@@ -252,10 +269,12 @@ module PardonParser
         $output_debug_file.puts CSV::generate_line([ get_BOE_id(doc.url), 
                                 "#{year}-#{month}-#{day}", 
                                 department, 
-                                name, 
+                                name,
+                                court, 
                                 sentence_date, 
                                 role, 
                                 crime, 
+                                nil,
                                 sentence, 
                                 crime_year,
                                 pardon_type,
@@ -268,9 +287,11 @@ module PardonParser
                                 "#{year}-#{month}-#{day}", 
                                 department, 
                                 name, 
+                                court,
                                 sentence_date, 
                                 role, 
                                 crime, 
+                                nil,
                                 sentence, 
                                 crime_year,
                                 pardon_type,
