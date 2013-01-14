@@ -194,6 +194,36 @@ module PardonParser
       return pardon_type, partial_pardon, condition
     end
   end
+  
+  def self.get_pardon_authorization_details(p)
+    p.gsub!(NBSP, ' ') # Get rid of the funny whitespaces
+
+    # Find out the pardon authorization date
+    p =~ /\s*Dado en (?:.*?)(?:el|a)\s*(\d+\s*de\s*[^ ]+\s+(?:de\s+)?\d{4})\.?/
+    pardon_date = $1
+    left_over = $'
+
+    if $1.nil?
+      # Notify that an unhandled field has been found
+      @excep_desc = "Error parsing pardon_date in get_pardon_authorization_details"
+      @excep = true
+      return
+    end
+    
+    # Find out the pardon authorization minister
+    left_over =~ /\s*(?:El|La)\s*Ministr[oa] (?:.*?)[,\.]\s*(.*)\s*$/
+    minister = $1
+    
+    if $1.nil?
+      @excep_desc = "Error parsing minister in get_pardon_authorization_details"
+      @excep = true
+      return pardon_date, nil
+    else
+      minister.gsub!(/\s*$/,"")
+    end
+    
+    return pardon_date, minister
+  end
 
   def self.parse_file(doc)
     # Initialize exception vars
@@ -238,6 +268,7 @@ module PardonParser
         court, sentence_date, role, crime, sentence, crime_year = get_trial_details(first_paragraph)
         pardon_type, pardon, condition = get_pardon_details(second_paragraph)
       end
+      pardon_date, minister = get_pardon_authorization_details(second_paragraph)
       
       # Name
       title =~ /((don|doña)( ((y)|(de la)|(de los)|del|de|[A-ZÁÉÍÓÚ][^ ]+))+)/
@@ -279,7 +310,9 @@ module PardonParser
                                 crime_year,
                                 pardon_type,
                                 pardon,
-                                condition])
+                                condition,
+                                pardon_date,
+                                minister])
         return false
       else
         # Write to output file
@@ -296,7 +329,9 @@ module PardonParser
                                 crime_year,
                                 pardon_type,
                                 pardon,
-                                condition])
+                                condition,
+                                pardon_date,
+                                minister])
         return true
       end
     end
