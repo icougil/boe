@@ -141,8 +141,6 @@ module PardonParser
         @excep = true
       else
         # Clean up new_sentence in case name appears in
-        # Ex: "quince días de prisión, al Soldado Militar Profesional de Tropa
-        # y Marinería del Ejército de Tierra don José Hernández Quintero"
         if (new_sentence =~ /((don|doña)( ((y)|(de la)|(de los)|del|de|[A-ZÁÉÍÓÚ][^ ]+))+)/)
           new_sentence.gsub!(/prisión, al? .*$/,"prisión.")
         end
@@ -271,14 +269,18 @@ module PardonParser
       pardon_date, minister = get_pardon_authorization_details(second_paragraph)
       
       # Name
-      title =~ /((don|doña)( ((y)|(de la)|(de los)|del|de|[A-ZÁÉÍÓÚ][^ ]+))+)/
-      name = $1
+      title =~ /([Dd]on|[Dd]oña)/
+      gender = $1
       if $1.nil?
         @excep = true
-        write_log(get_BOE_id(doc.url),"Error parsing name in parse_file",title,formatted_text)
+        write_log(get_BOE_id(doc.url),"Error parsing gender in parse_file",title,formatted_text)
         return
       else
-        name.gsub!(/\.$/,'')
+        if gender.index("ñ")
+          gender = "M"
+        else
+          gender = "H"
+        end
       end   
       
       #BOE date
@@ -300,7 +302,7 @@ module PardonParser
         $output_debug_file.puts CSV::generate_line([ get_BOE_id(doc.url), 
                                 "#{year}-#{month}-#{day}", 
                                 department, 
-                                name,
+                                gender,
                                 court, 
                                 sentence_date, 
                                 role, 
@@ -319,7 +321,7 @@ module PardonParser
         $output_file.puts CSV::generate_line([ get_BOE_id(doc.url), 
                                 "#{year}-#{month}-#{day}", 
                                 department, 
-                                name, 
+                                gender, 
                                 court,
                                 sentence_date, 
                                 role, 
