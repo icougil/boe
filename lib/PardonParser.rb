@@ -268,7 +268,7 @@ module PardonParser
       end
       pardon_date, minister = get_pardon_authorization_details(second_paragraph)
       
-      # Name
+      # Gender
       title =~ /([Dd]on|[Dd]oña)/
       gender = $1
       if $1.nil?

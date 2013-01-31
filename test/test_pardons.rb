@@ -48,7 +48,7 @@ class PardonParserTest < Test::Unit::TestCase
   end
 
   def test_military_first_paragraph
-    aMilitaryPardon = "Visto el expediente de indulto relativo al Soldado Militar Profesional de Tropa y Marinería del Ejército de Tierra don Rubén Pariente González, condenado por el Tribunal Militar Territorial Primero, con sede en Madrid, en las Diligencias Preparatorias número 12/35/07, como autor de un delito de «deserción», previsto y penado en el artículo 120 del Código Penal Militar, a la pena de dos años y cuatro meses de prisión, con las accesorias legales de suspensión de cargo público y derecho de sufragio pasivo durante el tiempo de la condena, constando en el mismo los informes del Tribunal Sentenciador, del Fiscal Jurídico Militar y del Asesor Jurídico General del Ministerio de Defensa, a propuesta del Ministro de Defensa y previa deliberación del Consejo de Ministros en su reunión del día 5 de octubre de 2012,"
+    aMilitaryPardon = "Visto el expediente de indulto relativo al Soldado Militar Profesional de Tropa y Marinería del Ejército de Tierra don Hombre cualquiera, condenado por el Tribunal Militar Territorial Primero, con sede en Madrid, en las Diligencias Preparatorias número 12/35/07, como autor de un delito de «deserción», previsto y penado en el artículo 120 del Código Penal Militar, a la pena de dos años y cuatro meses de prisión, con las accesorias legales de suspensión de cargo público y derecho de sufragio pasivo durante el tiempo de la condena, constando en el mismo los informes del Tribunal Sentenciador, del Fiscal Jurídico Militar y del Asesor Jurídico General del Ministerio de Defensa, a propuesta del Ministro de Defensa y previa deliberación del Consejo de Ministros en su reunión del día 5 de octubre de 2012,"
     court, sentence_date, role, crime, sentence, crime_year = PardonParser.get_military_trial_details(aMilitaryPardon)
     assert_equal "Tribunal Militar Territorial Primero, con sede en Madrid", court
     assert_equal nil, sentence_date
@@ -57,10 +57,10 @@ class PardonParserTest < Test::Unit::TestCase
     assert_equal "dos años y cuatro meses de prisión, con las accesorias legales de suspensión de cargo público y derecho de sufragio pasivo durante el tiempo de la condena", sentence
     assert_equal nil, crime_year
 
-    secondHalf = "Vengo en conceder al Soldado Militar Profesional de Tropa y Marinería del Ejército de Tierra don Rubén Pariente González, el indulto parcial respecto de la pena de prisión impuesta con sus accesorias legales, remitiendo la misma por la de seis meses de prisión con sus accesorias legales."
+    secondHalf = "Vengo en conceder al Soldado Militar Profesional de Tropa y Marinería del Ejército de Tierra don Hombre Cualquiera, el indulto parcial respecto de la pena de prisión impuesta con sus accesorias legales, remitiendo la misma por la de seis meses de prisión con sus accesorias legales."
     pardon_type, name, new_sentence, condition = PardonParser.get_military_pardon_details(secondHalf)
     assert_equal 'indulto parcial', pardon_type
-    assert_equal 'don Rubén Pariente González', name
+    assert_equal 'don Hombre Cualquiera', name
     assert_equal 'seis meses de prisión con sus accesorias legales', new_sentence
     assert_equal nil, condition
   end
