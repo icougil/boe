@@ -1,0 +1,96 @@
+[
+  {
+    "op": "core/column-rename",
+    "description": "Rename column BOE to boe",
+    "oldColumnName": "BOE",
+    "newColumnName": "boe"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Año_Concesión to pardon_year",
+    "oldColumnName": "Año_Concesión",
+    "newColumnName": "pardon_year"
+  },
+  {
+    "op": "core/column-reorder",
+    "description": "Reorder columns",
+    "columnNames": [
+      "boe",
+      "Lista_Crimenes",
+      "Categoría crimen",
+      "pardon_year"
+    ]
+  },
+  {
+    "op": "core/multivalued-cell-split",
+    "description": "Split multi-valued cells in column Lista_Crimenes",
+    "columnName": "Lista_Crimenes",
+    "keyColumnName": "boe",
+    "separator": "|",
+    "mode": "plain"
+  },
+  {
+    "op": "core/fill-down",
+    "description": "Fill down cells in column boe",
+    "engineConfig": {
+      "facets": [],
+      "mode": "record-based"
+    },
+    "columnName": "boe"
+  },
+  {
+    "op": "core/fill-down",
+    "description": "Fill down cells in column pardon_year",
+    "engineConfig": {
+      "facets": [],
+      "mode": "record-based"
+    },
+    "columnName": "pardon_year"
+  },
+  {
+    "op": "core/text-transform",
+    "description": "Text transform on cells in column Categoría crimen using expression grel:row.cells.Lista_Crimenes.cross(\"Match_Crime_Categories\", \"Crimen\").cells[\"Categoría\"].value[0]",
+    "engineConfig": {
+      "facets": [],
+      "mode": "record-based"
+    },
+    "columnName": "Categoría crimen",
+    "expression": "grel:row.cells.Lista_Crimenes.cross(\"Match_Crime_Categories\", \"Crimen\").cells[\"Categoría\"].value[0]",
+    "onError": "keep-original",
+    "repeat": false,
+    "repeatCount": 10
+  },
+  {
+    "op": "core/column-split",
+    "description": "Split column Categoría crimen by separator",
+    "engineConfig": {
+      "facets": [],
+      "mode": "record-based"
+    },
+    "columnName": "Categoría crimen",
+    "guessCellType": false,
+    "removeOriginalColumn": true,
+    "mode": "separator",
+    "separator": ".",
+    "regex": false,
+    "maxColumns": 2
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Categoría crimen 1 to crime_cat",
+    "oldColumnName": "Categoría crimen 1",
+    "newColumnName": "crime_cat"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Categoría crimen 2 to crime_sub_cat",
+    "oldColumnName": "Categoría crimen 2",
+    "newColumnName": "crime_sub_cat"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Lista_Crimenes to crime",
+    "oldColumnName": "Lista_Crimenes",
+    "newColumnName": "crime"
+  }
+]

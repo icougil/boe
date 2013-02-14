@@ -1,0 +1,132 @@
+[
+  {
+    "op": "core/column-rename",
+    "description": "Rename column BOE to boe",
+    "oldColumnName": "BOE",
+    "newColumnName": "boe"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Fecha to boe_date",
+    "oldColumnName": "Fecha",
+    "newColumnName": "boe_date"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Departamento to ministry",
+    "oldColumnName": "Departamento",
+    "newColumnName": "ministry"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Género to gender",
+    "oldColumnName": "Género",
+    "newColumnName": "gender"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Tribunal to court",
+    "oldColumnName": "Tribunal",
+    "newColumnName": "court"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Tipo_Tribunal to court_type",
+    "oldColumnName": "Tipo_Tribunal",
+    "newColumnName": "court_type"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column idCCAA_Tribunal to court_region_id",
+    "oldColumnName": "idCCAA_Tribunal",
+    "newColumnName": "court_region_id"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Fecha_Condena to trial_date",
+    "oldColumnName": "Fecha_Condena",
+    "newColumnName": "trial_date"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Papel to role",
+    "oldColumnName": "Papel",
+    "newColumnName": "role"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Crimen_Sentencia to crimes_sentences",
+    "oldColumnName": "Crimen_Sentencia",
+    "newColumnName": "crimes_sentences"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Año_Inicio_Crimen to crime_initial_year",
+    "oldColumnName": "Año_Inicio_Crimen",
+    "newColumnName": "crime_initial_year"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Año_Fin_Crimen to crime_final_year",
+    "oldColumnName": "Año_Fin_Crimen",
+    "newColumnName": "crime_final_year"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Tipo indulto to pardon_type",
+    "oldColumnName": "Tipo indulto",
+    "newColumnName": "pardon_type"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Reducción/Nueva condena to new_sentence",
+    "oldColumnName": "Reducción/Nueva condena",
+    "newColumnName": "new_sentence"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Condición to condition",
+    "oldColumnName": "Condición",
+    "newColumnName": "condition"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Año_Concesión to pardon_year",
+    "oldColumnName": "Año_Concesión",
+    "newColumnName": "pardon_year"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Fecha_Concesión to pardon_date",
+    "oldColumnName": "Fecha_Concesión",
+    "newColumnName": "pardon_date"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Ministro to signature",
+    "oldColumnName": "Ministro",
+    "newColumnName": "signature"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Url to url",
+    "oldColumnName": "Url",
+    "newColumnName": "url"
+  },
+  {
+     "op": "core/column-removal",
+     "description": "Remove column Lista_Crimenes",
+     "columnName": "Lista_Crimenes"
+   },
+   {
+     "op": "core/column-removal",
+     "description": "Remove column Categoría crimen",
+     "columnName": "Categoría crimen"
+   },
+   {
+     "op": "core/column-move",
+     "description": "Move column pardon_year to position 16",
+     "columnName": "pardon_year",
+     "index": 16
+   }
+]

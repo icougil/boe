@@ -1,0 +1,753 @@
+[
+  {
+    "op": "core/column-addition",
+    "description": "Create column Url at index 16 based on column Ministro using expression grel:\"http://www.boe.es/buscar/doc.php?id=\"+row.cells.BOE.value",
+    "engineConfig": {
+      "facets": [],
+      "mode": "row-based"
+    },
+    "newColumnName": "Url",
+    "columnInsertIndex": 16,
+    "baseColumnName": "Ministro",
+    "expression": "grel:\"http://www.boe.es/buscar/doc.php?id=\"+row.cells.BOE.value",
+    "onError": "set-to-blank"
+  },
+  {
+    "op": "core/column-addition",
+    "description": "Create column Año_Fin_Crimen at index 11 based on column Año crimen using expression grel:if(length(split(value,\"-\"))==1,value,split(value,\"-\")[1])",
+    "engineConfig": {
+      "facets": [],
+      "mode": "row-based"
+    },
+    "newColumnName": "Año_Fin_Crimen",
+    "columnInsertIndex": 11,
+    "baseColumnName": "Año crimen",
+    "expression": "grel:if(length(split(value,\"-\"))==1,value,split(value,\"-\")[1])",
+    "onError": "set-to-blank"
+  },
+  {
+    "op": "core/text-transform",
+    "description": "Text transform on cells in column Año crimen using expression grel:value.replace(/-.*/,\"\")",
+    "engineConfig": {
+      "facets": [],
+      "mode": "row-based"
+    },
+    "columnName": "Año crimen",
+    "expression": "grel:value.replace(/-.*/,\"\")",
+    "onError": "keep-original",
+    "repeat": false,
+    "repeatCount": 10
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Año crimen to Año_Inicio_Crimen",
+    "oldColumnName": "Año crimen",
+    "newColumnName": "Año_Inicio_Crimen"
+  },
+  {
+    "op": "core/text-transform",
+    "description": "Text transform on cells in column Fecha using expression grel:value.toDate(\"dd/MM/yy\").toString(\"yyyy-MM-dd\")",
+    "engineConfig": {
+      "facets": [],
+      "mode": "row-based"
+    },
+    "columnName": "Fecha",
+    "expression": "grel:value.toDate(\"dd/MM/yy\").toString(\"yyyy-MM-dd\")",
+    "onError": "keep-original",
+    "repeat": false,
+    "repeatCount": 10
+  },
+  {
+    "op": "core/column-split",
+    "description": "Split column Fecha condena by separator",
+    "engineConfig": {
+      "facets": [],
+      "mode": "row-based"
+    },
+    "columnName": "Fecha condena",
+    "guessCellType": false,
+    "removeOriginalColumn": false,
+    "mode": "separator",
+    "separator": "\\s*de\\s*",
+    "regex": true,
+    "maxColumns": 3
+  },
+  {
+    "op": "core/column-split",
+    "description": "Split column Fecha concesión by separator",
+    "engineConfig": {
+      "facets": [],
+      "mode": "row-based"
+    },
+    "columnName": "Fecha concesión",
+    "guessCellType": false,
+    "removeOriginalColumn": false,
+    "mode": "separator",
+    "separator": "\\s*de\\s*",
+    "regex": true,
+    "maxColumns": 3
+  },
+  {
+    "op": "core/text-transform",
+    "description": "Text transform on cells in column Fecha condena 1 using expression grel:\"0\"+value",
+    "engineConfig": {
+      "facets": [
+        {
+          "query": "^\\d{1}$",
+          "name": "Fecha concesión 1",
+          "caseSensitive": false,
+          "columnName": "Fecha concesión 1",
+          "type": "text",
+          "mode": "text"
+        }
+      ],
+      "mode": "row-based"
+    },
+    "columnName": "Fecha condena 1",
+    "expression": "grel:\"0\"+value",
+    "onError": "keep-original",
+    "repeat": false,
+    "repeatCount": 10
+  },
+  {
+    "op": "core/text-transform",
+    "description": "Text transform on cells in column Fecha condena 1 using expression grel:\"0\"+value",
+    "engineConfig": {
+      "facets": [
+        {
+          "query": "^\\d{1}$",
+          "name": "Fecha condena 1",
+          "caseSensitive": false,
+          "columnName": "Fecha condena 1",
+          "type": "text",
+          "mode": "regex"
+        }
+      ],
+      "mode": "row-based"
+    },
+    "columnName": "Fecha condena 1",
+    "expression": "grel:\"0\"+value",
+    "onError": "keep-original",
+    "repeat": false,
+    "repeatCount": 10
+  },
+  {
+    "op": "core/text-transform",
+    "description": "Text transform on cells in column Fecha condena 2 using expression grel:value.replace(/[Ee]nero/,\"01\")",
+    "engineConfig": {
+      "facets": [],
+      "mode": "row-based"
+    },
+    "columnName": "Fecha condena 2",
+    "expression": "grel:value.replace(/[Ee]nero/,\"01\")",
+    "onError": "keep-original",
+    "repeat": false,
+    "repeatCount": 10
+  },
+  {
+    "op": "core/text-transform",
+    "description": "Text transform on cells in column Fecha condena 2 using expression grel:value.replace(/[Ff]ebrero/,\"02\")",
+    "engineConfig": {
+      "facets": [],
+      "mode": "row-based"
+    },
+    "columnName": "Fecha condena 2",
+    "expression": "grel:value.replace(/[Ff]ebrero/,\"02\")",
+    "onError": "keep-original",
+    "repeat": false,
+    "repeatCount": 10
+  },
+  {
+    "op": "core/text-transform",
+    "description": "Text transform on cells in column Fecha condena 2 using expression grel:value.replace(/[Mm]arzo/,\"03\")",
+    "engineConfig": {
+      "facets": [],
+      "mode": "row-based"
+    },
+    "columnName": "Fecha condena 2",
+    "expression": "grel:value.replace(/[Mm]arzo/,\"03\")",
+    "onError": "keep-original",
+    "repeat": false,
+    "repeatCount": 10
+  },
+  {
+    "op": "core/text-transform",
+    "description": "Text transform on cells in column Fecha condena 2 using expression grel:value.replace(/[Aa]bril/,\"04\")",
+    "engineConfig": {
+      "facets": [],
+      "mode": "row-based"
+    },
+    "columnName": "Fecha condena 2",
+    "expression": "grel:value.replace(/[Aa]bril/,\"04\")",
+    "onError": "keep-original",
+    "repeat": false,
+    "repeatCount": 10
+  },
+  {
+    "op": "core/text-transform",
+    "description": "Text transform on cells in column Fecha condena 2 using expression grel:value.replace(/[Mm]ayo/,\"05\")",
+    "engineConfig": {
+      "facets": [],
+      "mode": "row-based"
+    },
+    "columnName": "Fecha condena 2",
+    "expression": "grel:value.replace(/[Mm]ayo/,\"05\")",
+    "onError": "keep-original",
+    "repeat": false,
+    "repeatCount": 10
+  },
+  {
+    "op": "core/text-transform",
+    "description": "Text transform on cells in column Fecha condena 2 using expression grel:value.replace(/[Jj]unio/,\"06\")",
+    "engineConfig": {
+      "facets": [],
+      "mode": "row-based"
+    },
+    "columnName": "Fecha condena 2",
+    "expression": "grel:value.replace(/[Jj]unio/,\"06\")",
+    "onError": "keep-original",
+    "repeat": false,
+    "repeatCount": 10
+  },
+  {
+    "op": "core/text-transform",
+    "description": "Text transform on cells in column Fecha condena 2 using expression grel:value.replace(/[Jj]ulio/,\"07\")",
+    "engineConfig": {
+      "facets": [],
+      "mode": "row-based"
+    },
+    "columnName": "Fecha condena 2",
+    "expression": "grel:value.replace(/[Jj]ulio/,\"07\")",
+    "onError": "keep-original",
+    "repeat": false,
+    "repeatCount": 10
+  },
+  {
+    "op": "core/text-transform",
+    "description": "Text transform on cells in column Fecha condena 2 using expression grel:value.replace(/[Aa]gosto/,\"08\")",
+    "engineConfig": {
+      "facets": [],
+      "mode": "row-based"
+    },
+    "columnName": "Fecha condena 2",
+    "expression": "grel:value.replace(/[Aa]gosto/,\"08\")",
+    "onError": "keep-original",
+    "repeat": false,
+    "repeatCount": 10
+  },
+  {
+    "op": "core/text-transform",
+    "description": "Text transform on cells in column Fecha condena 2 using expression grel:value.replace(/[Ss]eptiembre/,\"09\")",
+    "engineConfig": {
+      "facets": [],
+      "mode": "row-based"
+    },
+    "columnName": "Fecha condena 2",
+    "expression": "grel:value.replace(/[Ss]eptiembre/,\"09\")",
+    "onError": "keep-original",
+    "repeat": false,
+    "repeatCount": 10
+  },
+  {
+    "op": "core/text-transform",
+    "description": "Text transform on cells in column Fecha condena 2 using expression grel:value.replace(/[Oo]ctubre/,\"10\")",
+    "engineConfig": {
+      "facets": [],
+      "mode": "row-based"
+    },
+    "columnName": "Fecha condena 2",
+    "expression": "grel:value.replace(/[Oo]ctubre/,\"10\")",
+    "onError": "keep-original",
+    "repeat": false,
+    "repeatCount": 10
+  },
+  {
+    "op": "core/text-transform",
+    "description": "Text transform on cells in column Fecha condena 2 using expression grel:value.replace(/[Nn]oviembre/,\"11\")",
+    "engineConfig": {
+      "facets": [],
+      "mode": "row-based"
+    },
+    "columnName": "Fecha condena 2",
+    "expression": "grel:value.replace(/[Nn]oviembre/,\"11\")",
+    "onError": "keep-original",
+    "repeat": false,
+    "repeatCount": 10
+  },
+  {
+    "op": "core/text-transform",
+    "description": "Text transform on cells in column Fecha condena 2 using expression grel:value.replace(/[Dd]iciembre/,\"12\")",
+    "engineConfig": {
+      "facets": [],
+      "mode": "row-based"
+    },
+    "columnName": "Fecha condena 2",
+    "expression": "grel:value.replace(/[Dd]iciembre/,\"12\")",
+    "onError": "keep-original",
+    "repeat": false,
+    "repeatCount": 10
+  },
+  {
+    "op": "core/text-transform",
+    "description": "Text transform on cells in column Fecha concesión 2 using expression grel:value.replace(/[Ee]nero/,\"01\")",
+    "engineConfig": {
+      "facets": [],
+      "mode": "row-based"
+    },
+    "columnName": "Fecha concesión 2",
+    "expression": "grel:value.replace(/[Ee]nero/,\"01\")",
+    "onError": "keep-original",
+    "repeat": false,
+    "repeatCount": 10
+  },
+  {
+    "op": "core/text-transform",
+    "description": "Text transform on cells in column Fecha concesión 2 using expression grel:value.replace(/[Ff]ebrero/,\"02\")",
+    "engineConfig": {
+      "facets": [],
+      "mode": "row-based"
+    },
+    "columnName": "Fecha concesión 2",
+    "expression": "grel:value.replace(/[Ff]ebrero/,\"02\")",
+    "onError": "keep-original",
+    "repeat": false,
+    "repeatCount": 10
+  },
+  {
+    "op": "core/text-transform",
+    "description": "Text transform on cells in column Fecha concesión 2 using expression grel:value.replace(/[Mm]arzo/,\"03\")",
+    "engineConfig": {
+      "facets": [],
+      "mode": "row-based"
+    },
+    "columnName": "Fecha concesión 2",
+    "expression": "grel:value.replace(/[Mm]arzo/,\"03\")",
+    "onError": "keep-original",
+    "repeat": false,
+    "repeatCount": 10
+  },
+  {
+    "op": "core/text-transform",
+    "description": "Text transform on cells in column Fecha concesión 2 using expression grel:value.replace(/[Aa]bril/,\"04\")",
+    "engineConfig": {
+      "facets": [],
+      "mode": "row-based"
+    },
+    "columnName": "Fecha concesión 2",
+    "expression": "grel:value.replace(/[Aa]bril/,\"04\")",
+    "onError": "keep-original",
+    "repeat": false,
+    "repeatCount": 10
+  },
+  {
+    "op": "core/text-transform",
+    "description": "Text transform on cells in column Fecha concesión 2 using expression grel:value.replace(/[Mm]ayo/,\"05\")",
+    "engineConfig": {
+      "facets": [],
+      "mode": "row-based"
+    },
+    "columnName": "Fecha concesión 2",
+    "expression": "grel:value.replace(/[Mm]ayo/,\"05\")",
+    "onError": "keep-original",
+    "repeat": false,
+    "repeatCount": 10
+  },
+  {
+    "op": "core/text-transform",
+    "description": "Text transform on cells in column Fecha concesión 2 using expression grel:value.replace(/[Jj]unio/,\"06\")",
+    "engineConfig": {
+      "facets": [],
+      "mode": "row-based"
+    },
+    "columnName": "Fecha concesión 2",
+    "expression": "grel:value.replace(/[Jj]unio/,\"06\")",
+    "onError": "keep-original",
+    "repeat": false,
+    "repeatCount": 10
+  },
+  {
+    "op": "core/text-transform",
+    "description": "Text transform on cells in column Fecha concesión 2 using expression grel:value.replace(/[Jj]ulio/,\"07\")",
+    "engineConfig": {
+      "facets": [],
+      "mode": "row-based"
+    },
+    "columnName": "Fecha concesión 2",
+    "expression": "grel:value.replace(/[Jj]ulio/,\"07\")",
+    "onError": "keep-original",
+    "repeat": false,
+    "repeatCount": 10
+  },
+  {
+    "op": "core/text-transform",
+    "description": "Text transform on cells in column Fecha concesión 2 using expression grel:value.replace(/[Aa]gosto/,\"08\")",
+    "engineConfig": {
+      "facets": [],
+      "mode": "row-based"
+    },
+    "columnName": "Fecha concesión 2",
+    "expression": "grel:value.replace(/[Aa]gosto/,\"08\")",
+    "onError": "keep-original",
+    "repeat": false,
+    "repeatCount": 10
+  },
+  {
+    "op": "core/text-transform",
+    "description": "Text transform on cells in column Fecha concesión 2 using expression grel:value.replace(/[Ss]eptiembre/,\"09\")",
+    "engineConfig": {
+      "facets": [],
+      "mode": "row-based"
+    },
+    "columnName": "Fecha concesión 2",
+    "expression": "grel:value.replace(/[Ss]eptiembre/,\"09\")",
+    "onError": "keep-original",
+    "repeat": false,
+    "repeatCount": 10
+  },
+  {
+    "op": "core/text-transform",
+    "description": "Text transform on cells in column Fecha concesión 2 using expression grel:value.replace(/[Oo]ctubre/,\"10\")",
+    "engineConfig": {
+      "facets": [],
+      "mode": "row-based"
+    },
+    "columnName": "Fecha concesión 2",
+    "expression": "grel:value.replace(/[Oo]ctubre/,\"10\")",
+    "onError": "keep-original",
+    "repeat": false,
+    "repeatCount": 10
+  },
+  {
+    "op": "core/text-transform",
+    "description": "Text transform on cells in column Fecha concesión 2 using expression grel:value.replace(/[Nn]oviembre/,\"11\")",
+    "engineConfig": {
+      "facets": [],
+      "mode": "row-based"
+    },
+    "columnName": "Fecha concesión 2",
+    "expression": "grel:value.replace(/[Nn]oviembre/,\"11\")",
+    "onError": "keep-original",
+    "repeat": false,
+    "repeatCount": 10
+  },
+  {
+    "op": "core/text-transform",
+    "description": "Text transform on cells in column Fecha concesión 2 using expression grel:value.replace(/[Dd]iciembre/,\"12\")",
+    "engineConfig": {
+      "facets": [],
+      "mode": "row-based"
+    },
+    "columnName": "Fecha concesión 2",
+    "expression": "grel:value.replace(/[Dd]iciembre/,\"12\")",
+    "onError": "keep-original",
+    "repeat": false,
+    "repeatCount": 10
+  },
+  {
+    "op": "core/column-addition",
+    "description": "Create column Fecha_Concesión at index 22 based on column Fecha concesión 3 using expression grel:value+\"-\"+row.cells[\"Fecha concesión 2\"].value+\"-\"+row.cells[\"Fecha concesión 1\"].value",
+    "engineConfig": {
+      "facets": [],
+      "mode": "row-based"
+    },
+    "newColumnName": "Fecha_Concesión",
+    "columnInsertIndex": 22,
+    "baseColumnName": "Fecha concesión 3",
+    "expression": "grel:value+\"-\"+row.cells[\"Fecha concesión 2\"].value+\"-\"+row.cells[\"Fecha concesión 1\"].value",
+    "onError": "set-to-blank"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Fecha concesión 3 to Año_Concesión",
+    "oldColumnName": "Fecha concesión 3",
+    "newColumnName": "Año_Concesión"
+  },
+  {
+    "op": "core/column-removal",
+    "description": "Remove column Fecha concesión",
+    "columnName": "Fecha concesión"
+  },
+  {
+    "op": "core/column-removal",
+    "description": "Remove column Fecha concesión 1",
+    "columnName": "Fecha concesión 1"
+  },
+  {
+    "op": "core/column-removal",
+    "description": "Remove column Fecha concesión 2",
+    "columnName": "Fecha concesión 2"
+  },
+  {
+    "op": "core/column-addition",
+    "description": "Create column Fecha_Condena at index 9 based on column Fecha condena 3 using expression grel:value+\"-\"+row.cells[\"Fecha condena 2\"].value+\"-\"+row.cells[\"Fecha condena 1\"].value",
+    "engineConfig": {
+      "facets": [],
+      "mode": "row-based"
+    },
+    "newColumnName": "Fecha_Condena",
+    "columnInsertIndex": 9,
+    "baseColumnName": "Fecha condena 3",
+    "expression": "grel:value+\"-\"+row.cells[\"Fecha condena 2\"].value+\"-\"+row.cells[\"Fecha condena 1\"].value",
+    "onError": "set-to-blank"
+  },
+  {
+    "op": "core/column-removal",
+    "description": "Remove column Fecha condena",
+    "columnName": "Fecha condena"
+  },
+  {
+    "op": "core/column-removal",
+    "description": "Remove column Fecha condena 1",
+    "columnName": "Fecha condena 1"
+  },
+  {
+    "op": "core/column-removal",
+    "description": "Remove column Fecha condena 2",
+    "columnName": "Fecha condena 2"
+  },
+  {
+    "op": "core/column-removal",
+    "description": "Remove column Fecha condena 3",
+    "columnName": "Fecha condena 3"
+  },
+  {
+    "op": "core/column-addition",
+    "description": "Create column Crimen_Sentencia at index 8 based on column Crimen using expression grel:value+\", a la pena de \"+row.cells.Sentencia.value",
+    "engineConfig": {
+      "facets": [],
+      "mode": "row-based"
+    },
+    "newColumnName": "Crimen_Sentencia",
+    "columnInsertIndex": 8,
+    "baseColumnName": "Crimen",
+    "expression": "grel:value+\", a la pena de \"+row.cells.Sentencia.value",
+    "onError": "set-to-blank"
+  },
+  {
+    "op": "core/column-removal",
+    "description": "Remove column Crimen",
+    "columnName": "Crimen"
+  },
+  {
+    "op": "core/column-removal",
+    "description": "Remove column Sentencia",
+    "columnName": "Sentencia"
+  },
+  {
+    "op": "core/column-addition",
+    "description": "Create column Tipo_Tribunal at index 5 based on column Tribunal using expression null",
+    "engineConfig": {
+      "facets": [],
+      "mode": "row-based"
+    },
+    "newColumnName": "Tipo_Tribunal",
+    "columnInsertIndex": 5,
+    "baseColumnName": "Tribunal",
+    "expression": "null",
+    "onError": "set-to-blank"
+  },
+  {
+    "op": "core/text-transform",
+    "description": "Text transform on cells in column Tipo_Tribunal using expression grel:if(isBlank(value),if(isNotNull(row.cells.Tribunal.value.match(/^[Aa]udiencia\\s*[Pp]rovincial.*/)),\"Audiencia Provincial\",\"\"),value)",
+    "engineConfig": {
+      "facets": [],
+      "mode": "row-based"
+    },
+    "columnName": "Tipo_Tribunal",
+    "expression": "grel:if(isBlank(value),if(isNotNull(row.cells.Tribunal.value.match(/^[Aa]udiencia\\s*[Pp]rovincial.*/)),\"Audiencia Provincial\",\"\"),value)",
+    "onError": "keep-original",
+    "repeat": false,
+    "repeatCount": 10
+  },
+  {
+    "op": "core/text-transform",
+    "description": "Text transform on cells in column Tipo_Tribunal using expression grel:if(isBlank(value),if(isNotNull(row.cells.Tribunal.value.match(/^[Jj]uzgado\\s*[Dd]e\\s*lo\\s*[Pp]enal.*/)),\"Juzgado de lo Penal\",\"\"),value)",
+    "engineConfig": {
+      "facets": [],
+      "mode": "row-based"
+    },
+    "columnName": "Tipo_Tribunal",
+    "expression": "grel:if(isBlank(value),if(isNotNull(row.cells.Tribunal.value.match(/^[Jj]uzgado\\s*[Dd]e\\s*lo\\s*[Pp]enal.*/)),\"Juzgado de lo Penal\",\"\"),value)",
+    "onError": "keep-original",
+    "repeat": false,
+    "repeatCount": 10
+  },
+  {
+    "op": "core/text-transform",
+    "description": "Text transform on cells in column Tipo_Tribunal using expression grel:if(isBlank(value),if(isNotNull(row.cells.Tribunal.value.match(/^[Jj]uzgado\\s*[Dd]e\\s*[Pp]rimera\\s*[Ii]nstancia\\s*.*/)),\"Juzgado de Primera Instancia e Instrucción\",\"\"),value)",
+    "engineConfig": {
+      "facets": [],
+      "mode": "row-based"
+    },
+    "columnName": "Tipo_Tribunal",
+    "expression": "grel:if(isBlank(value),if(isNotNull(row.cells.Tribunal.value.match(/^[Jj]uzgado\\s*[Dd]e\\s*[Pp]rimera\\s*[Ii]nstancia\\s*.*/)),\"Juzgado de Primera Instancia e Instrucción\",\"\"),value)",
+    "onError": "keep-original",
+    "repeat": false,
+    "repeatCount": 10
+  },
+  {
+    "op": "core/text-transform",
+    "description": "Text transform on cells in column Tipo_Tribunal using expression grel:if(isBlank(value),if(isNotNull(row.cells.Tribunal.value.match(/^[Jj]uzgado\\s*[Dd]e\\s*[Ii]nstrucción\\s*.*/)),\"Juzgado de Primera Instancia e Instrucción\",\"\"),value)",
+    "engineConfig": {
+      "facets": [],
+      "mode": "row-based"
+    },
+    "columnName": "Tipo_Tribunal",
+    "expression": "grel:if(isBlank(value),if(isNotNull(row.cells.Tribunal.value.match(/^[Jj]uzgado\\s*[Dd]e\\s*[Ii]nstrucción\\s*.*/)),\"Juzgado de Primera Instancia e Instrucción\",\"\"),value)",
+    "onError": "keep-original",
+    "repeat": false,
+    "repeatCount": 10
+  },
+  {
+    "op": "core/text-transform",
+    "description": "Text transform on cells in column Tipo_Tribunal using expression grel:if(isBlank(value),if(isNotNull(row.cells.Tribunal.value.match(/^[Aa]udiencia\\s*[Nn]acional.*/)),\"Audiencia Nacional\",\"\"),value)",
+    "engineConfig": {
+      "facets": [],
+      "mode": "row-based"
+    },
+    "columnName": "Tipo_Tribunal",
+    "expression": "grel:if(isBlank(value),if(isNotNull(row.cells.Tribunal.value.match(/^[Aa]udiencia\\s*[Nn]acional.*/)),\"Audiencia Nacional\",\"\"),value)",
+    "onError": "keep-original",
+    "repeat": false,
+    "repeatCount": 10
+  },
+  {
+    "op": "core/text-transform",
+    "description": "Text transform on cells in column Tipo_Tribunal using expression grel:if(isBlank(value),if(isNotNull(row.cells.Tribunal.value.match(/^[Tt]ribunal\\s*[Ss]upremo.*/)),\"Tribunal Supremo\",\"\"),value)",
+    "engineConfig": {
+      "facets": [],
+      "mode": "row-based"
+    },
+    "columnName": "Tipo_Tribunal",
+    "expression": "grel:if(isBlank(value),if(isNotNull(row.cells.Tribunal.value.match(/^[Tt]ribunal\\s*[Ss]upremo.*/)),\"Tribunal Supremo\",\"\"),value)",
+    "onError": "keep-original",
+    "repeat": false,
+    "repeatCount": 10
+  },
+  {
+    "op": "core/column-addition",
+    "description": "Create column Lista_Crimenes at index 10 based on column Categoría crimen using expression grel:value",
+    "engineConfig": {
+      "facets": [],
+      "mode": "row-based"
+    },
+    "newColumnName": "Lista_Crimenes",
+    "columnInsertIndex": 10,
+    "baseColumnName": "Categoría crimen",
+    "expression": "grel:value",
+    "onError": "set-to-blank"
+  },
+  {
+    "op": "core/column-move",
+    "description": "Move column Lista_Crimenes to position 9",
+    "columnName": "Lista_Crimenes",
+    "index": 9
+  },
+  {
+    "op": "core/column-addition",
+    "description": "Create column geoTribunal at index 6 based on column Tipo_Tribunal using expression null",
+    "engineConfig": {
+      "facets": [],
+      "mode": "row-based"
+    },
+    "newColumnName": "geoTribunal",
+    "columnInsertIndex": 6,
+    "baseColumnName": "Tipo_Tribunal",
+    "expression": "null",
+    "onError": "set-to-blank"
+  },
+  {
+    "op": "core/text-transform",
+    "description": "Text transform on cells in column geoTribunal using expression grel:row.cells.Tribunal.value.match(/.*?\\s*de\\s*([A-ZÁÉÍÓÚ][^ ]*(?:\\s+(?:y|(?:de la)|(?:de los)|del|de|[A-ZÁÉÍÓÚ][^ ]*))*)(?:(?:,.*)|$)/)[0]",
+    "engineConfig": {
+      "facets": [],
+      "mode": "row-based"
+    },
+    "columnName": "geoTribunal",
+    "expression": "grel:row.cells.Tribunal.value.match(/.*?\\s*de\\s*([A-ZÁÉÍÓÚ][^ ]*(?:\\s+(?:y|(?:de la)|(?:de los)|del|de|[A-ZÁÉÍÓÚ][^ ]*))*)(?:(?:,.*)|$)/)[0]",
+    "onError": "keep-original",
+    "repeat": false,
+    "repeatCount": 10
+  },
+  {
+    "op": "core/column-addition-by-fetching-urls",
+    "description": "Create column geoCode at index 7 by fetching URLs based on column geoTribunal using expression grel:\"http://maps.googleapis.com/maps/api/geocode/json?address=\" + escape(value, \"url\")+\"&sensor=false&region=es&language=es\"",
+    "engineConfig": {
+      "facets": [],
+      "mode": "row-based"
+    },
+    "newColumnName": "geoCode",
+    "columnInsertIndex": 7,
+    "baseColumnName": "geoTribunal",
+    "urlExpression": "grel:\"http://maps.googleapis.com/maps/api/geocode/json?address=\" + escape(value, \"url\")+\"&sensor=false&region=es&language=es\"",
+    "onError": "set-to-blank",
+    "delay": 1000
+  },
+  {
+    "op": "core/column-addition",
+    "description": "Create column nomCCAA at index 8 based on column geoCode using expression grel:forEach(value.parseJson().results[0].address_components,v,if(v.types[0].startsWith(\"administrative_area_level_1\"),v.long_name,\"\")).join(\"\")",
+    "engineConfig": {
+      "facets": [],
+      "mode": "row-based"
+    },
+    "newColumnName": "nomCCAA",
+    "columnInsertIndex": 8,
+    "baseColumnName": "geoCode",
+    "expression": "grel:forEach(value.parseJson().results[0].address_components,v,if(v.types[0].startsWith(\"administrative_area_level_1\"),v.long_name,\"\")).join(\"\")",
+    "onError": "set-to-blank"
+  },
+  {
+    "op": "core/column-addition",
+    "description": "Create column idCCAA_Tribunal at index 9 based on column nomCCAA using expression grel:row.cells.nomCCAA.cross(\"CCAA_id\",\"NomCCAAGoogle\").cells[\"idCCAA\"].value[0]",
+    "engineConfig": {
+      "facets": [],
+      "mode": "row-based"
+    },
+    "newColumnName": "idCCAA_Tribunal",
+    "columnInsertIndex": 9,
+    "baseColumnName": "nomCCAA",
+    "expression": "grel:row.cells.nomCCAA.cross(\"CCAA_id\",\"NomCCAAGoogle\").cells[\"idCCAA\"].value[0]",
+    "onError": "set-to-blank"
+  },
+  {
+    "op": "core/column-removal",
+    "description": "Remove column geoTribunal",
+    "columnName": "geoTribunal"
+  },
+  {
+    "op": "core/column-removal",
+    "description": "Remove column geoCode",
+    "columnName": "geoCode"
+  },
+  {
+    "op": "core/column-removal",
+    "description": "Remove column nomCCAA",
+    "columnName": "nomCCAA"
+  },
+  {
+    "op": "core/text-transform",
+    "description": "Text transform on cells in column Lista_Crimenes using expression grel:forEach(split(row.cells.Crimen_Sentencia.value,/,\\s*a\\s*la\\s*pena\\s*de/),v,if(isNotNull(v.match(/.*?((?:delitos?|faltas?).*)/)),v.match(/.*?((?:delitos?|faltas?).*)/)[0],\"\")).join(\"|\")",
+    "engineConfig": {
+      "facets": [],
+      "mode": "row-based"
+    },
+    "columnName": "Lista_Crimenes",
+    "expression": "grel:forEach(split(row.cells.Crimen_Sentencia.value,/,\\s*a\\s*la\\s*pena\\s*de/),v,if(isNotNull(v.match(/.*?((?:delitos?|faltas?).*)/)),v.match(/.*?((?:delitos?|faltas?).*)/)[0],\"\")).join(\"|\")",
+    "onError": "keep-original",
+    "repeat": false,
+    "repeatCount": 10
+  },
+  {
+    "op": "core/text-transform",
+    "description": "Text transform on cells in column Lista_Crimenes using expression grel:value.replace(/\\|$/,\"\")",
+    "engineConfig": {
+      "facets": [],
+      "mode": "row-based"
+    },
+    "columnName": "Lista_Crimenes",
+    "expression": "grel:value.replace(/\\|$/,\"\")",
+    "onError": "keep-original",
+    "repeat": false,
+    "repeatCount": 10
+  }
+]
