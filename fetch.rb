@@ -7,8 +7,11 @@ require 'mechanize'
 require 'fastercsv'
 require 'nokogiri'
 require 'open-uri'
+require 'fileutils'
 
 YEAR = ARGV[0]
+DATA_SUBDIR = 'data'
+FileUtils.makedirs(DATA_SUBDIR)
 
 class BOESpider
   def initialize
