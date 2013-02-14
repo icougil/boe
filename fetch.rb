@@ -1,3 +1,5 @@
+#!/usr/bin/env ruby
+# encoding: UTF-8
 # NOTE: Currently we are only fetching the BOE-A series
 
 require 'rubygems'
@@ -5,6 +7,8 @@ require 'mechanize'
 require 'fastercsv'
 require 'nokogiri'
 require 'open-uri'
+
+YEAR = ARGV[0]
 
 class BOESpider
   def initialize
@@ -45,4 +49,4 @@ class BOESpider
 end
 
 spider = BOESpider.new()
-spider.fetch_year(2013)
+spider.fetch_year(YEAR)
