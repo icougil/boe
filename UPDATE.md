@@ -62,7 +62,7 @@ Para ello utilizamos la opción de *Import Project* de **GR**:
 - Seleccionamos el fichero _refine/CCAA\_id.google-refine.tag.gz_ e importamos el proyecto.
 - Seleccionamos el fichero _refine/Match\_Crime\_Categories.google-refine.tar.gz_ e importamos el proyecto.
 
-*Nota*: es importante no cambiar el nombre en la importación, i.e., dejar el campo '*Re-name project*' en blanco.
+*Nota*: es importante no cambiar el nombre en la importación, i.e., dejar el campo `Re-name project` en blanco.
 
 ### Carga inicial en GR
 
@@ -70,22 +70,22 @@ Creamos un nuevo proyecto en **GR** importando el fichero final *output/Indultos
 
 - La codificación del texto: Los originales están en UTF-8 pero si hemos usado una hoja de cálculo para la verificación interna
   debemos tenerlo en cuenta ya que ha podido cambiar el formato del csv (tanto en codificación como en el delimitador)
-- **Desmarcar "*Parse cell text into numbers, dates, ...*" ** en las opciones de importación de **GR**. Así no transformará automáticamente los tipos de dato. 
-- Para seguir una nomenclatura concreta recomendamos utilizar el siguiente nombre de proyecto "*<Fecha>\_pardons*" donde <fecha> es el día en el que se realiza este proceso de actualización. Por ejemplo: "*20130213\_pardons*"
+- **Desmarcar `Parse cell text into numbers, dates, ...` ** en las opciones de importación de **GR**. Así no transformará automáticamente los tipos de dato. 
+- Para seguir una nomenclatura concreta recomendamos utilizar el siguiente nombre de proyecto `<Fecha>\_pardons` donde <Fecha> es el día en el que se realiza este proceso de actualización. Por ejemplo: `20130213\_pardons`
 
 ### Transformación inicial en GR
 
-Copiamos el contenido del *json* incluido en "*refine/initialPardonsTransform.json*", en **GR** vamos a (*Undo/Redo <span>&rarr;</span> Apply*) y lo pegamos en la ventana emergente y aceptamos.
+Copiamos el contenido del *json* incluido en *refine/initialPardonsTransform.json*, en **GR** vamos a `Undo/Redo <span>&rarr;</span> Apply` y lo pegamos en la ventana emergente y aceptamos.
 
 ### Exportar proyecto GR y reimportarlo con otro nombre
 
 Necesitaremos dos proyectos **GR** de cara a generar los dos ficheros de datos necesarios para el indultómetro, esto es debido a la relación *1:n* que existe entre los indultos y sus respectivos delitos.
 
-Para ello lo más sencillo es exportar el proyecto actual de **GR** y reimportarlo cambiándole el nombre por "*<Fecha>\_pardon\_crime\_categories*". Por ejemplo: "*20130212\_pardon\_crime\_categories*"
+Para ello lo más sencillo es exportar el proyecto actual de **GR** y reimportarlo cambiándole el nombre por `<Fecha>\_pardon\_crime\_categories`. Por ejemplo: `20130212\_pardon\_crime\_categories`
 
 ### Transformación final indultos en GR
 
-Abrimos el proyecto original "*<Fecha>\_pardons*"
+Abrimos el proyecto original `<Fecha>\_pardons`
 
 Copiamos el contenido del *json* incluido en "*refine/finalPardonsTransform.json*", en **GR** vamos a (*Undo/Redo -> Apply*) y lo pegamos en la ventana emergente y aceptamos.
 
