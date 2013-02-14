@@ -59,10 +59,10 @@ Si es **la primera vez** que ejecutamos este proceso, debemos importar dos proye
 
 Para ello utilizamos la opción de *Import Project* de **GR**:
 
-- Selecccionamos el fichero "*refine/CCAA\_id.google-refine.tag.gz*" e importamos el proyecto.
-- Seleccionamos el fichero "*refine/Match\_Crime\_Categories.google-refine.tar.gz*" e importamos el proyecto.
+- Seleccionamos el fichero _refine/CCAA\_id.google-refine.tag.gz_ e importamos el proyecto.
+- Seleccionamos el fichero _refine/Match\_Crime\_Categories.google-refine.tar.gz_ e importamos el proyecto.
 
-*Nota*: es importante no cambiar el nombre en la importación, i.e., dejar el campo "*Re-name project*" en blanco.
+*Nota*: es importante no cambiar el nombre en la importación, i.e., dejar el campo '*Re-name project*' en blanco.
 
 ### Carga inicial en GR
 
