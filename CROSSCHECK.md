@@ -3,6 +3,9 @@ Verificación externa
 
 En este documento describimos los pasos para poder verificar los datos extraídos de los indultos contra los datos ofrecidos por el propio BOE dentro de su buscador. Esta es una tarea que se encuentra incluida dentro de la metodología de la aplicación web de [elindultometro][]
 
+Este proceso es un paso de la metodología para la creación del repositorio de indultos para ver el proceso completo debe acceder a [este][] documento
+
+[este]: ./UPDATE.md
 [elindultometro]: http://elindultometro.es
 
 ***
