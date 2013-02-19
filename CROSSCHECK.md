@@ -13,7 +13,7 @@ En este documento describimos los pasos para poder verificar los datos extraído
 
 Ejecutar la tarea rake encargada de extraer los resultados de la búsqueda de la web del BOE
 
-  rake crosscheck:pardons[<year>]
+    rake crosscheck:pardons[<year>]
 
 _Nota_: El script escribe los resultados en el fichero `crosscheck/crosscheck<year>.csv`
 
