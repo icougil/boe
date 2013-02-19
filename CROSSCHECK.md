@@ -19,9 +19,11 @@ _Nota_: El script escribe los resultados en el fichero `crosscheck/crosscheck<ye
 
 ***
 
-### Verificación externa
+## Hoja de cálculo
 
-Utilizando una hoja de cálculo importamos el fichero `crosscheck/crosscheck<year>.csv` y lo cruzamos (_VLOOKUP_) con los indultos que hemos detectado para ese año en nuestro proceso completo de parsing. 
+### Comparación de resultados
+
+Utilizando una hoja de cálculo importamos el fichero `crosscheck/crosscheck<year>.csv` y lo cruzamos _(VLOOKUP)_ con los indultos que hemos detectado para ese año en nuestro proceso completo de parsing. 
   
 Si encontramos diferencias tanto en un sentido como en el otro, debemos utilizar los enlaces al propio boe para tratar de detectar la causa. Si procede podremos realizar un proceso manual para la incorporación de los indultos no detectados o podemos constatar por el contrario no se trata de indultos _per\_se_ sino de disposiciones que simplemente mencionan la palabra indulto.
   
