@@ -36,3 +36,18 @@ namespace 'parse' do
     
   end
 end
+
+namespace 'crosscheck' do
+  desc "Extract crosscheck pardons from BOE search engine"
+  task :pardons, :year do |t, args|
+    puts "Extracting crosscheck pardons from BOE search engine for year #{args.year}..."
+    begin
+      PTY.spawn("#{File.dirname(__FILE__)}/crosscheck.rb #{args.year}") do |stdin, stdout, pid|
+        stdin.each { |line| puts line }
+      end
+    rescue PTY::ChildExited
+      puts "The child process exited!"
+    end
+    
+  end
+end
