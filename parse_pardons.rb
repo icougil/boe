@@ -9,7 +9,7 @@ require 'csv'
 
 require './lib/PardonParser.rb'
 
-HEADER = 'BOE,Fecha,Departamento,Nombre,Tribunal,Fecha condena,Papel,Crimen,Categoría crimen,Sentencia,Año crimen,Tipo indulto,Reducción/Nueva condena,Condición'
+HEADER = 'BOE,Fecha,Departamento,Genero,Tribunal,Fecha condena,Papel,Crimen,Categoría crimen,Sentencia,Año crimen,Tipo indulto,Reducción/Nueva condena,Condición,Fecha concesión,Ministro'
 LOG_SUBDIR = 'logs'
 OUTPUT_FILES_SUBDIR = 'output'
 YEAR = ARGV[0]
