@@ -28,7 +28,7 @@ count = 1
 pardons_ok = 0
 pardons_nok = 0
 Dir["#{PATH}/*.html"].each do |filename| 
-  puts "parsed #{count} BOE documents: found #{pardons_ok} OkPardons and #{pardons_nok} DebugPardons." if (count % 1000 == 0)
+  # puts "parsed #{count} BOE documents: found #{pardons_ok} OkPardons and #{pardons_nok} DebugPardons." if (count % 1000 == 0)
   result = PardonParser.parse_file Nokogiri::HTML(open(filename))
   if !result.nil?
     if result 

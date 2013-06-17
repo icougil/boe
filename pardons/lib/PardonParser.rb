@@ -259,6 +259,8 @@ module PardonParser
         return;
       end
 
+      puts "#{get_BOE_id(doc.url)},\"#{title}\",\"#{first_paragraph.strip}\",\"#{second_paragraph.strip}\""
+
       if department == 'Ministerio de Defensa'
         court, sentence_date, role, crime, sentence, crime_year = get_military_trial_details(first_paragraph)
         pardon_type, pardon, condition = get_military_pardon_details(second_paragraph)
