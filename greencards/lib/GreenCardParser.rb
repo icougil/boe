@@ -9,12 +9,6 @@ module GreenCardParser
   def self.parse_file(doc)
     title = doc.css("h3.documento-tit").text.squeeze(" ")
 
-    unless title =~ /Sabahet/
-      return
-    end
-
-    puts title
-
     # Find out whether we have a green card. Don't try to match the name in the title just in case, 
     # we're being very prudent here to avoid missing a green card.
     if (!title.empty? and title =~ /carta de naturaleza/)
